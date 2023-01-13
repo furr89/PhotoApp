@@ -1,0 +1,59 @@
+<!--The below will be the base html being built off (kinda like SPAs)-->
+{% extends "base.html" %}
+{% load thumbnail %}
+
+{% block title %} 
+    Home Page
+{% endblock %}
+
+<!--This must be named the same as the one in base.html-->
+{% block body %}
+
+    <div class="row">
+
+        {% for p in posts %}
+
+        <div class="col-sm-6 col-md-3">
+
+            <div class="card my-4" style="width: 18rem;">
+        
+                <!--If there is an image uploaded, display it-->
+                {% if p.image != '1' %}
+    
+                    {% thumbnail p.image "350x280" crop="center" as im %}
+                        <img src="{{ im.url }}" class="card-img-top">
+                    {% endthumbnail %}
+    
+                {% endif %}
+    
+                <div class="card-body">
+                    <h5 class="card-title">{{ p.text }}</h5>
+    
+                    <!--Disable or eneable the button depending on if there is an image-->
+                    {% if p.image == '1' %}
+                        <a href="{% url 'feed:detail' p.id %}" class="btn btn-primary disabled">View Full Image</a>
+    
+                    {% else%}
+                        <a href="{% url 'feed:detail' p.id %}" class="btn btn-primary">View Full Image</a>
+    
+                    {% endif %}
+                </div>
+            </div> 
+
+        </div>    
+
+        {% empty %}
+
+            <div class="col-sm-6 offest-3 text-center my-5 mx-auto">
+                <h1>Welcome!</h1>
+                <p>Add a new image</p>
+                <a href="{% url 'feed:post' %}" class="btn btn-success">Post Image</a>
+                
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
